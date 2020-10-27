@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React from 'react';
 import {
   BrowserRouter as Router,
   Route,
@@ -13,54 +13,44 @@ import UpdatePlace from './places/pages/UpdatePlace';
 import Auth from './user/pages/Auth';
 import MainNavigation from './shared/components/Navigation/MainNavigation';
 import { AuthContext } from './shared/context/auth-context';
+import { useAuth } from './shared/hooks/auth-hook';
 
 const App = () => {
-  const [token, setToken] = useState(false);
-  const [userId, setUserId] = useState(false);
-
-  const login = useCallback((uid, token) => {
-    setToken(token);
-    setUserId(uid);
-  }, []);
-
-  const logout = useCallback(() => {
-    setToken(null);
-    setUserId(null);
-  }, []);
+  const { token, login, logout, userId } = useAuth();
 
   let routes;
 
   if (token) {
     routes = (
       <Switch>
-        <Route path="/" exact>
+        <Route path='/' exact>
           <Users />
         </Route>
-        <Route path="/:userId/places" exact>
+        <Route path='/:userId/places' exact>
           <UserPlaces />
         </Route>
-        <Route path="/places/new" exact>
+        <Route path='/places/new' exact>
           <NewPlace />
         </Route>
-        <Route path="/places/:placeId">
+        <Route path='/places/:placeId'>
           <UpdatePlace />
         </Route>
-        <Redirect to="/" />
+        <Redirect to='/' />
       </Switch>
     );
   } else {
     routes = (
       <Switch>
-        <Route path="/" exact>
+        <Route path='/' exact>
           <Users />
         </Route>
-        <Route path="/:userId/places" exact>
+        <Route path='/:userId/places' exact>
           <UserPlaces />
         </Route>
-        <Route path="/auth">
+        <Route path='/auth'>
           <Auth />
         </Route>
-        <Redirect to="/auth" />
+        <Redirect to='/auth' />
       </Switch>
     );
   }
